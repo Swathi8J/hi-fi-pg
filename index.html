@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hi-Fi PG Management</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ========== LANDING PAGE ========== -->
+  <div id="landingPage" class="landing-page">
+
+    <!-- Animated particle canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Glowing orbs background -->
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+
+    <div class="landing-scroll">
+
+      <!-- ── HERO SECTION ── -->
+      <section class="hero-section">
+        <div class="logo-wrap">
+          <svg class="hifi-logo" viewBox="0 0 420 120" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="metalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%"   stop-color="#a8c8e8"/>
+                <stop offset="40%"  stop-color="#6aaed6"/>
+                <stop offset="100%" stop-color="#2b6cb0"/>
+              </linearGradient>
+              <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%"   stop-color="#63b3ed"/>
+                <stop offset="100%" stop-color="#00d4ff"/>
+              </linearGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <rect x="10"  y="10" width="14" height="70" rx="3" fill="url(#metalGrad)"/>
+            <rect x="10"  y="40" width="38" height="12" rx="3" fill="url(#metalGrad)"/>
+            <rect x="34"  y="10" width="14" height="70" rx="3" fill="url(#metalGrad)"/>
+            <rect x="60"  y="10" width="12" height="12" rx="6" fill="url(#glowGrad)" filter="url(#glow)"/>
+            <rect x="60"  y="28" width="12" height="52" rx="3" fill="url(#metalGrad)"/>
+            <rect x="82"  y="38" width="22" height="10" rx="5" fill="url(#metalGrad)"/>
+            <rect x="114" y="10" width="14" height="70" rx="3" fill="url(#metalGrad)"/>
+            <rect x="114" y="10" width="36" height="12" rx="3" fill="url(#metalGrad)"/>
+            <rect x="114" y="40" width="28" height="11" rx="3" fill="url(#metalGrad)"/>
+            <rect x="162" y="10" width="12" height="70" rx="3" fill="url(#metalGrad)"/>
+            <g filter="url(#glow)">
+              <rect x="188" y="30" width="28" height="50" rx="2" fill="url(#glowGrad)" opacity="0.9"/>
+              <rect x="220" y="15" width="20" height="65" rx="2" fill="url(#glowGrad)" opacity="0.85"/>
+              <rect x="244" y="40" width="16" height="40" rx="2" fill="url(#glowGrad)" opacity="0.8"/>
+              <rect x="193" y="38" width="6" height="6" rx="1" fill="#001a33" opacity="0.7"/>
+              <rect x="204" y="38" width="6" height="6" rx="1" fill="#001a33" opacity="0.7"/>
+              <rect x="193" y="50" width="6" height="6" rx="1" fill="#001a33" opacity="0.7"/>
+              <rect x="204" y="50" width="6" height="6" rx="1" fill="#001a33" opacity="0.7"/>
+              <rect x="225" y="24" width="5" height="5" rx="1" fill="#001a33" opacity="0.7"/>
+              <rect x="233" y="24" width="5" height="5" rx="1" fill="#001a33" opacity="0.7"/>
+              <rect x="225" y="34" width="5" height="5" rx="1" fill="#001a33" opacity="0.7"/>
+              <rect x="233" y="34" width="5" height="5" rx="1" fill="#001a33" opacity="0.7"/>
+              <line x1="200" y1="62" x2="215" y2="62" stroke="#00d4ff" stroke-width="1.5" opacity="0.8"/>
+              <line x1="215" y1="62" x2="215" y2="55" stroke="#00d4ff" stroke-width="1.5" opacity="0.8"/>
+              <circle cx="215" cy="55" r="2.5" fill="#00d4ff" opacity="0.9"/>
+              <circle cx="200" cy="62" r="2"   fill="#00d4ff" opacity="0.9"/>
+            </g>
+          </svg>
+          <div class="logo-subtitle">PG MANAGEMENT</div>
+          <p class="hero-tagline">Premium Living. Trusted Care. Your Home Away From Home.</p>
+        </div>
+
+        <!-- Animated stats -->
+        <div class="stats-row">
+          <div class="stat-box">
+            <span class="stat-num" data-target="2">0</span>
+            <span class="stat-label">Locations</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-box">
+            <span class="stat-num" data-target="10">0</span>
+            <span class="stat-label">Services</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-box">
+            <span class="stat-num" data-target="100">0</span><span class="stat-plus">+</span>
+            <span class="stat-label">Happy Residents</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-box">
+            <span class="stat-num" data-target="24">0</span><span class="stat-plus">/7</span>
+            <span class="stat-label">Support</span>
+          </div>
+        </div>
+
+        <!-- Scroll hint -->
+        <div class="scroll-hint">
+          <span>Scroll to explore</span>
+          <div class="scroll-arrow"></div>
+        </div>
+      </section>
+
+      <!-- ── SERVICES SECTION ── -->
+      <section class="services-section-full">
+        <div class="section-header">
+          <div class="section-tag">WHAT WE OFFER</div>
+          <h2 class="section-title">Our <span class="highlight">Services</span></h2>
+          <p class="section-sub">Everything you need for a comfortable stay</p>
+        </div>
+
+        <div class="services-cards-grid">
+          <div class="svc-card reveal">
+            <div class="svc-icon-wrap" style="--c:#3b82f6">📶</div>
+            <div class="svc-card-title">High-Speed WiFi</div>
+            <div class="svc-card-desc">Blazing fast internet for work, study & entertainment</div>
+          </div>
+          <div class="svc-card reveal">
+            <div class="svc-icon-wrap" style="--c:#f59e0b">🍽️</div>
+            <div class="svc-card-title">Home Food</div>
+            <div class="svc-card-desc">Freshly cooked nutritious meals, just like home</div>
+          </div>
+          <div class="svc-card reveal">
+            <div class="svc-icon-wrap" style="--c:#06b6d4">❄️</div>
+            <div class="svc-card-title">AC Rooms</div>
+            <div class="svc-card-desc">Fully air-conditioned rooms for your comfort</div>
+          </div>
+          <div class="svc-card reveal">
+            <div class="svc-icon-wrap" style="--c:#10b981">🔒</div>
+            <div class="svc-card-title">24/7 Security</div>
+            <div class="svc-card-desc">Round-the-clock security for your peace of mind</div>
+          </div>
+          <div class="svc-card reveal">
+            <div class="svc-icon-wrap" style="--c:#8b5cf6">📹</div>
+            <div class="svc-card-title">CCTV Surveillance</div>
+            <div class="svc-card-desc">Complete premises monitored with HD cameras</div>
+          </div>
+          <div class="svc-card reveal">
+            <div class="svc-icon-wrap" style="--c:#f59e0b">⚡</div>
+            <div class="svc-card-title">Power Backup</div>
+            <div class="svc-card-desc">Uninterrupted power supply 24 hours a day</div>
+          </div>
+          <div class="svc-card reveal">
+            <div class="svc-icon-wrap" style="--c:#ec4899">👕</div>
+            <div class="svc-card-title">Laundry</div>
+            <div class="svc-card-desc">Convenient laundry service at your doorstep</div>
+          </div>
+          <div class="svc-card reveal">
+            <div class="svc-icon-wrap" style="--c:#3b82f6">🚿</div>
+            <div class="svc-card-title">Hot Water</div>
+            <div class="svc-card-desc">24/7 hot water supply in all bathrooms</div>
+          </div>
+          <div class="svc-card reveal">
+            <div class="svc-icon-wrap" style="--c:#10b981">🧹</div>
+            <div class="svc-card-title">Housekeeping</div>
+            <div class="svc-card-desc">Daily room cleaning and maintenance service</div>
+          </div>
+          <div class="svc-card reveal">
+            <div class="svc-icon-wrap" style="--c:#6366f1">🅿️</div>
+            <div class="svc-card-title">Parking</div>
+            <div class="svc-card-desc">Safe and secure parking for bikes & vehicles</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── SELECT SECTION ── -->
+      <section class="select-section">
+
+        <!-- STEP 1: Location -->
+        <div id="stepLocation">
+          <div class="section-header">
+            <div class="section-tag">GET STARTED</div>
+            <h2 class="section-title">Choose Your <span class="highlight">Location</span></h2>
+          </div>
+          <div class="pg-cards">
+            <div class="pg-card location-card tumkur" onclick="selectLocation('Tumkur')">
+              <div class="pg-card-glow"></div>
+              <div class="pg-card-icon">📍</div>
+              <div class="pg-card-label">Tumkur</div>
+              <div class="pg-card-sub">Hi-Fi PG · Tumkur</div>
+              <div class="pg-card-arrow">→</div>
+            </div>
+            <div class="pg-card location-card mysore" onclick="selectLocation('Mysore')">
+              <div class="pg-card-glow"></div>
+              <div class="pg-card-icon">🏰</div>
+              <div class="pg-card-label">Mysore</div>
+              <div class="pg-card-sub">Hi-Fi PG · Mysore</div>
+              <div class="pg-card-arrow">→</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: PG Type -->
+        <div id="stepPGType" style="display:none;">
+          <div class="step-back" onclick="backToLocation()">← Change Location</div>
+          <div class="section-header">
+            <span class="selected-location-badge" id="selectedLocationBadge">📍 Tumkur</span>
+            <h2 class="section-title" style="margin-top:10px;">Select <span class="highlight">PG Type</span></h2>
+          </div>
+          <div class="pg-cards">
+            <div class="pg-card girls" onclick="selectPG('girls')">
+              <div class="pg-card-glow"></div>
+              <div class="pg-card-icon">👩</div>
+              <div class="pg-card-label">Girls PG</div>
+              <div class="pg-card-sub">Hi-Fi Girls Paying Guest</div>
+              <div class="pg-card-arrow">→</div>
+            </div>
+            <div class="pg-card boys" onclick="selectPG('boys')">
+              <div class="pg-card-glow"></div>
+              <div class="pg-card-icon">👨</div>
+              <div class="pg-card-label">Boys PG</div>
+              <div class="pg-card-sub">Hi-Fi Boys Paying Guest</div>
+              <div class="pg-card-arrow">→</div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <footer class="landing-footer-bar">
+        <p>© 2026 Hi-Fi PG Management System &nbsp;·&nbsp; Tumkur &amp; Mysore</p>
+      </footer>
+
+    </div><!-- end landing-scroll -->
+  </div>
+
+  <!-- ========== MAIN APP ========== -->
+  <div id="mainApp" style="display:none;">
+
+  <header>
+    <div class="header-left">
+      <button class="back-home-btn" onclick="goHome()" title="Back to Home">⌂</button>
+      <div class="header-logo-text">
+        <span class="header-hifi">Hi-Fi</span>
+        <span id="headerPGType" class="header-pgtype">PG</span>
+        <span id="headerLocation" class="header-location"></span>
+      </div>
+    </div>
+    <nav>
+      <button class="nav-btn active" onclick="showPage('admission')">Admission</button>
+      <button class="nav-btn" onclick="showPage('students')">Students List</button>
+    </nav>
+  </header>
+
+  <!-- ADMISSION FORM PAGE -->
+  <div id="page-admission" class="page active">
+    <!-- background orbs -->
+    <div class="admission-orb admission-orb-1"></div>
+    <div class="admission-orb admission-orb-2"></div>
+    <div class="admission-orb admission-orb-3"></div>
+
+    <div class="card">
+      <h2>New Student Admission</h2>
+      <p class="note">⚠️ ID Proof (Aadhaar Card) is mandatory for admission.</p>
+
+      <form id="admissionForm" onsubmit="submitForm(event)">
+
+        <fieldset>
+          <legend>Student Details</legend>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" id="name" placeholder="Enter full name" required />
+            </div>
+            <div class="form-group">
+              <label>Phone Number *</label>
+              <input type="tel" id="phone" placeholder="10-digit mobile number"
+                pattern="[0-9]{10}" maxlength="10" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Address *</label>
+            <textarea id="address" rows="3" placeholder="Full address" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>ID Proof (Aadhaar Card) * <span class="badge">Required for Admission</span></label>
+            <input type="file" id="idProof" accept="image/*,.pdf" required />
+            <small>Accepted: Images or PDF only</small>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Room & Stay Details</legend>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Room Number *</label>
+              <input type="text" id="roomNumber" placeholder="e.g. 101" required />
+            </div>
+            <div class="form-group">
+              <label>Joining Date *</label>
+              <input type="date" id="joiningDate" required />
+            </div>
+            <div class="form-group">
+              <label>Duration (months) *</label>
+              <input type="number" id="duration" min="1" max="24" placeholder="e.g. 6" required />
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Rent & Payment Details</legend>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Monthly Rent (₹) *</label>
+              <input type="number" id="rent" min="0" placeholder="e.g. 5000" required oninput="calcRemainder()" />
+            </div>
+            <div class="form-group">
+              <label>Advance Paid (₹)</label>
+              <input type="number" id="advance" min="0" value="0" placeholder="e.g. 10000" oninput="calcRemainder()" />
+            </div>
+            <div class="form-group">
+              <label>Advance Return (₹)</label>
+              <input type="number" id="advanceReturn" min="0" value="0" placeholder="e.g. 0" oninput="calcRemainder()" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Rent Paid So Far (₹)</label>
+              <input type="number" id="rentPaid" min="0" value="0" placeholder="e.g. 5000" oninput="calcRemainder()" />
+            </div>
+            <div class="form-group remainder-box">
+              <label>Rent Remainder (₹)</label>
+              <input type="number" id="rentRemainder" readonly placeholder="Auto calculated" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Outstanding Balance (₹) <span class="badge-info">Extra dues</span></label>
+              <input type="number" id="outstanding" min="0" value="0" placeholder="e.g. electricity, food dues" oninput="calcRemainder()" />
+              <small>Any additional dues beyond rent (electricity, food, maintenance, etc.)</small>
+            </div>
+            <div class="form-group remainder-box">
+              <label>Total Outstanding (₹)</label>
+              <input type="number" id="totalOutstanding" readonly placeholder="Auto calculated" />
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="form-actions">
+          <button type="reset" class="btn-secondary" onclick="resetForm()">Clear</button>
+          <button type="submit" class="btn-primary">Admit Student</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- STUDENTS LIST PAGE -->
+  <div id="page-students" class="page">
+    <div class="card">
+      <div class="list-header">
+        <h2>Admitted Students</h2>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search by name, room, phone..." oninput="renderTable()" />
+          </div>
+          <a id="exportBtn" href="#" target="_blank" class="btn-primary" style="text-decoration:none;padding:9px 18px;font-size:0.9rem;border-radius:6px;display:inline-block;">
+            📊 Export Excel
+          </a>
+        </div>
+      </div>
+
+      <div id="emptyState" class="empty-state">
+        <p>No students admitted yet. Use the Admission form to add students.</p>
+      </div>
+
+      <!-- SUMMARY BAR -->
+      <div id="summaryBar" class="summary-bar" style="display:none;">
+        <div class="summary-item">
+          <span class="summary-label">Total Students</span>
+          <span class="summary-value" id="sumTotal">0</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-label">Total Rent Remainder</span>
+          <span class="summary-value red" id="sumRemainder">₹0</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-label">Total Outstanding Balance</span>
+          <span class="summary-value orange" id="sumOutstanding">₹0</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-label">Total Amount Due</span>
+          <span class="summary-value red-bold" id="sumTotal2">₹0</span>
+        </div>
+      </div>
+
+      <div id="tableWrapper" style="display:none; overflow-x:auto;">
+        <table id="studentsTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Room</th>
+              <th>Joining Date</th>
+              <th>Duration</th>
+              <th>Rent/mo</th>
+              <th>Advance</th>
+              <th>Adv. Return</th>
+              <th>Remainder</th>
+              <th>Outstanding</th>
+              <th>Total Due</th>
+              <th>ID Proof</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="studentsBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- STUDENT DETAIL MODAL -->
+  <div id="modal" class="modal-overlay" onclick="closeModal(event)">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  </div><!-- end #mainApp -->
+
+  <script src="app.js"></script>
+</body>
+</html>
