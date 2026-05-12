@@ -5,7 +5,179 @@ const API = 'http://localhost:3000/api';
 let students        = [];
 let currentPGType   = '';
 let currentLocation = '';
+let currentUser     = null;
 
+// ===== AUTH: TAB SWITCH =====
+function switchTab(tab) {
+  const isLogin = tab === 'login';
+  document.getElementById('formLogin').style.display    = isLogin ? 'block' : 'none';
+  document.getElementById('formRegister').style.display = isLogin ? 'none'  : 'block';
+  document.getElementById('tabLogin').classList.toggle('active', isLogin);
+  document.getElementById('tabRegister').classList.toggle('active', !isLogin);
+  document.getElementById('loginError').style.display      = 'none';
+  document.getElementById('registerError').style.display   = 'none';
+  document.getElementById('registerSuccess').style.display = 'none';
+}
+
+// ===== AUTH: LOGIN =====
+function doLogin(e) {
+  e.preventDefault();
+  const btn = document.getElementById('loginBtn');
+  const errEl = document.getElementById('loginError');
+  const username = document.getElementById('loginUser').value.trim();
+  const password = document.getElementById('loginPass').value;
+  btn.disabled = true;
+  document.getElementById('loginBtnText').textContent = 'Signing in...';
+  errEl.style.display = 'none';
+  fetch(API + '/login', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.error) throw new Error(data.error);
+    currentUser = data.user;
+    document.getElementById('loginPage').style.display   = 'none';
+    document.getElementById('landingPage').style.display = 'flex';
+    initParticles(); initCounters(); initScrollReveal();
+  })
+  .catch(err => { errEl.textContent = 'Invalid username or password'; errEl.style.display = 'block'; })
+  .finally(() => { btn.disabled = false; document.getElementById('loginBtnText').textContent = 'Sign In'; });
+}
+
+// ===== AUTH: REGISTER =====
+function doRegister(e) {
+  e.preventDefault();
+  const btn = document.getElementById('registerBtn');
+  const errEl  = document.getElementById('registerError');
+  const succEl = document.getElementById('registerSuccess');
+  const fullName = document.getElementById('regName').value.trim();
+  const username = document.getElementById('regUser').value.trim();
+  const password = document.getElementById('regPass').value;
+  const confirm  = document.getElementById('regPassConfirm').value;
+  errEl.style.display = 'none'; succEl.style.display = 'none';
+  if (password !== confirm) {
+    errEl.textContent = 'Passwords do not match'; errEl.style.display = 'block'; return;
+  }
+  btn.disabled = true;
+  document.getElementById('registerBtnText').textContent = 'Creating account...';
+  fetch(API + '/register', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password, full_name: fullName })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.error) throw new Error(data.error);
+    succEl.textContent = data.message; succEl.style.display = 'block';
+    document.getElementById('registerForm').reset();
+    setTimeout(() => switchTab('login'), 2000);
+  })
+  .catch(err => { errEl.textContent = err.message; errEl.style.display = 'block'; })
+  .finally(() => { btn.disabled = false; document.getElementById('registerBtnText').textContent = 'Create Account'; });
+}
+
+function togglePass(fieldId) {
+  const inp = document.getElementById(fieldId);
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+function doLogout() {
+  currentUser = null; currentPGType = ''; currentLocation = ''; students = [];
+  document.getElementById('mainApp').style.display     = 'none';
+  document.getElementById('landingPage').style.display = 'none';
+  document.getElementById('loginPage').style.display   = 'flex';
+  document.getElementById('loginForm').reset();
+  document.getElementById('stepPGType').style.display   = 'block';
+  document.getElementById('stepLocation').style.display = 'none';
+  document.getElementById('stepBranch').style.display   = 'none';
+  switchTab('login');
+}
+
+// ===== STEP 1: GENDER =====
+function selectGender(type) {
+  currentPGType = type;
+  document.getElementById('selectedGenderBadge').textContent = (type === 'girls' ? 'Girls PG' : 'Boys PG');
+  document.getElementById('stepPGType').style.display = 'none';
+  const s = document.getElementById('stepLocation');
+  s.style.display = 'block'; s.style.animation = 'fadeUp 0.4s ease both';
+}
+function backToGender() {
+  currentLocation = '';
+  document.getElementById('stepLocation').style.display = 'none';
+  document.getElementById('stepPGType').style.display   = 'block';
+}
+
+// ===== STEP 2: CITY =====
+function selectLocation(location) {
+  currentLocation = location;
+  const isTumkur = location === 'Tumkur';
+
+  // Show correct set of branch cards
+  document.querySelectorAll('.tumkur-branch').forEach(el => el.style.display = isTumkur ? '' : 'none');
+  document.querySelectorAll('.mysore-branch').forEach(el => el.style.display = isTumkur ? 'none' : '');
+
+  // Update badge text
+  const badge = document.getElementById('stepBranchBadge');
+  if (badge) badge.textContent = (isTumkur ? '📍' : '🏰') + ' ' + location;
+
+  document.getElementById('stepLocation').style.display = 'none';
+  const s = document.getElementById('stepBranch');
+  s.style.display = 'block'; s.style.animation = 'fadeUp 0.4s ease both';
+
+  // Reset then animate visible cards
+  document.querySelectorAll('.reveal-fast').forEach(el => el.classList.remove('visible'));
+  setTimeout(() => {
+    const sel = isTumkur ? '.tumkur-branch' : '.mysore-branch';
+    document.querySelectorAll(sel).forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), i * 120);
+    });
+  }, 100);
+}
+function backToLocation() {
+  currentLocation = '';
+  document.getElementById('stepBranch').style.display   = 'none';
+  document.getElementById('stepLocation').style.display = 'block';
+}
+
+// ===== STEP 3: BRANCH =====
+function selectBranch(branch) {
+  currentLocation = branch; enterApp();
+}
+
+// ===== ENTER APP =====
+function enterApp() {
+  document.getElementById('landingPage').style.display = 'none';
+  document.getElementById('mainApp').style.display     = 'block';
+  const header = document.querySelector('header');
+  const pgTypeEl = document.getElementById('headerPGType');
+  const locEl    = document.getElementById('headerLocation');
+  if (currentPGType === 'girls') {
+    header.classList.add('girls-mode'); header.classList.remove('boys-mode');
+    pgTypeEl.textContent = 'Girls PG'; pgTypeEl.className = 'header-pgtype girls-type';
+  } else {
+    header.classList.add('boys-mode'); header.classList.remove('girls-mode');
+    pgTypeEl.textContent = 'Boys PG'; pgTypeEl.className = 'header-pgtype boys-type';
+  }
+  locEl.textContent = (currentLocation.startsWith('Tumkur') ? '📍' : '🏰') + ' ' + currentLocation;
+  const exportBtn = document.getElementById('exportBtn');
+  if (exportBtn) exportBtn.href = API + '/export/' + currentLocation + '/' + currentPGType;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-admission').classList.add('active');
+  document.querySelectorAll('.nav-btn')[0].classList.add('active');
+  document.getElementById('joiningDate').value = new Date().toISOString().split('T')[0];
+}
+
+function goHome() {
+  document.getElementById('mainApp').style.display     = 'none';
+  document.getElementById('landingPage').style.display = 'flex';
+  document.getElementById('stepPGType').style.display   = 'block';
+  document.getElementById('stepLocation').style.display = 'none';
+  document.getElementById('stepBranch').style.display   = 'none';
+  currentPGType = ''; currentLocation = ''; students = [];
+}
+
+function saveStudents() {}
 // ===== LANDING ANIMATIONS =====
 window.addEventListener('DOMContentLoaded', () => {
   initParticles();
@@ -86,83 +258,9 @@ function initScrollReveal() {
     });
   }, { threshold: 0.1 });
 
-  document.querySelectorAll('.svc-card').forEach(card => observer.observe(card));
+  document.querySelectorAll('.svc-card, .location-card-full').forEach(card => observer.observe(card));
 }
 
-
-// ===== STEP 1: SELECT LOCATION =====
-function selectLocation(location) {
-  currentLocation = location;
-
-  // Update badge in step 2
-  const icon = location === 'Tumkur' ? '📍' : '🏰';
-  document.getElementById('selectedLocationBadge').textContent = icon + ' ' + location;
-
-  // Animate transition: hide step1, show step2
-  document.getElementById('stepLocation').style.display = 'none';
-  const step2 = document.getElementById('stepPGType');
-  step2.style.display = 'block';
-  step2.style.animation = 'fadeUp 0.4s ease both';
-}
-
-function backToLocation() {
-  currentLocation = '';
-  document.getElementById('stepPGType').style.display = 'none';
-  document.getElementById('stepLocation').style.display = 'block';
-}
-
-// ===== STEP 2: SELECT PG TYPE =====
-function selectPG(type) {
-  currentPGType = type;
-
-  // Show main app, hide landing
-  document.getElementById('landingPage').style.display = 'none';
-  document.getElementById('mainApp').style.display = 'block';
-
-  // Update header
-  const header   = document.querySelector('header');
-  const pgTypeEl = document.getElementById('headerPGType');
-  const locEl    = document.getElementById('headerLocation');
-
-  if (type === 'girls') {
-    header.classList.add('girls-mode');
-    header.classList.remove('boys-mode');
-    pgTypeEl.textContent = 'Girls PG';
-    pgTypeEl.className   = 'header-pgtype girls-type';
-  } else {
-    header.classList.add('boys-mode');
-    header.classList.remove('girls-mode');
-    pgTypeEl.textContent = 'Boys PG';
-    pgTypeEl.className   = 'header-pgtype boys-type';
-  }
-  locEl.textContent = (currentLocation === 'Tumkur' ? '📍' : '🏰') + ' ' + currentLocation;
-
-  // Set export button URL
-  const exportBtn = document.getElementById('exportBtn');
-  if (exportBtn) exportBtn.href = `${API}/export/${currentLocation}/${type}`;
-
-  // Reset to admission tab
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-admission').classList.add('active');
-  document.querySelectorAll('.nav-btn')[0].classList.add('active');
-
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('joiningDate').value = today;
-}
-
-function goHome() {
-  document.getElementById('mainApp').style.display = 'none';
-  document.getElementById('landingPage').style.display = 'flex';
-  document.getElementById('stepPGType').style.display  = 'none';
-  document.getElementById('stepLocation').style.display = 'block';
-  currentPGType   = '';
-  currentLocation = '';
-  students = [];
-}
-
-// ===== SAVE (no-op — backend handles persistence) =====
-function saveStudents() { /* data lives in MySQL */ }
 
 // ===== NAVIGATION =====
 function showPage(page) {
@@ -485,5 +583,7 @@ function formatDate(dateStr) {
 
 // ===== INIT =====
 // Landing page is shown on load; date is set when PG type is selected
+
+
 
 

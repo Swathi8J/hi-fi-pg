@@ -73,10 +73,78 @@ async function initDB() {
   `);
 
   console.log('');
+
+  // Create admin_users table
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS admin_users (
+      id         INT AUTO_INCREMENT PRIMARY KEY,
+      username   VARCHAR(100) NOT NULL UNIQUE,
+      password   VARCHAR(255) NOT NULL,
+      full_name  VARCHAR(150),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+  `);
+
+  // Insert default admin if not exists (username: admin, password: hifi@2024)
+  await pool.query(`
+    INSERT IGNORE INTO admin_users (username, password, full_name)
+    VALUES ('admin', 'hifi@2024', 'Hi-Fi Admin')
+  `);
+
   console.log('  MySQL DB ready: ' + (process.env.DB_NAME || 'hifi_pg'));
 }
 
 // ── ROUTES ────────────────────────────────────────────────────
+
+// ── LOGIN ROUTE ───────────────────────────────────────────────
+
+// POST register
+app.post('/api/register', async (req, res) => {
+  try {
+    const { username, password, full_name } = req.body;
+    if (!username || !password || !full_name)
+      return res.status(400).json({ error: 'All fields are required' });
+    if (username.trim().length < 3)
+      return res.status(400).json({ error: 'Username must be at least 3 characters' });
+    if (password.length < 6)
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+
+    // Check if username already exists
+    const [existing] = await pool.query(
+      'SELECT id FROM admin_users WHERE username = ?', [username.trim()]
+    );
+    if (existing.length)
+      return res.status(409).json({ error: 'Username already taken. Choose another.' });
+
+    await pool.query(
+      'INSERT INTO admin_users (username, password, full_name) VALUES (?, ?, ?)',
+      [username.trim(), password, full_name.trim()]
+    );
+    res.json({ success: true, message: 'Account created! You can now sign in.' });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// POST login
+app.post('/api/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password)
+      return res.status(400).json({ error: 'Username and password required' });
+
+    const [rows] = await pool.query(
+      'SELECT id, username, full_name FROM admin_users WHERE username = ? AND password = ?',
+      [username.trim(), password]
+    );
+    if (!rows.length)
+      return res.status(401).json({ error: 'Invalid username or password' });
+
+    res.json({ success: true, user: rows[0] });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
 
 // GET all students by location + pg_type
 app.get('/api/students/:location/:pgType', async (req, res) => {
@@ -271,4 +339,5 @@ initDB().then(() => {
   console.error('');
   process.exit(1);
 });
+
 
