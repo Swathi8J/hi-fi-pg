@@ -752,3 +752,221 @@ tbody tr:hover { background: rgba(255,255,255,0.05); }
   text-decoration: underline;
 }
 .auth-switch span:hover { color: #90cdf4; }
+
+/* ============================================================
+   DYNAMIC ANIMATIONS
+   ============================================================ */
+
+/* Page transitions */
+@keyframes pageIn  { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+@keyframes pageOut { from { opacity:1; transform:translateY(0); }    to { opacity:0; transform:translateY(-12px); } }
+
+/* Shake for validation */
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%     { transform: translateX(-8px); }
+  40%     { transform: translateX(8px); }
+  60%     { transform: translateX(-6px); }
+  80%     { transform: translateX(6px); }
+}
+
+/* Ripple effect */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  width: 8px; height: 8px;
+  transform: translate(-50%,-50%) scale(0);
+  animation: rippleAnim 0.6s ease-out forwards;
+  pointer-events: none;
+  z-index: 10;
+}
+@keyframes rippleAnim {
+  to { transform: translate(-50%,-50%) scale(30); opacity: 0; }
+}
+
+/* Ensure buttons have overflow hidden for ripple */
+.btn-primary, .btn-secondary, .login-btn, .nav-btn, .pg-card, .branch-card, .auth-tab {
+  overflow: hidden;
+  position: relative;
+}
+
+/* Toast progress bar */
+.toast-bar {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 3px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 0 0 8px 8px;
+  width: 100%;
+  transform-origin: left;
+}
+@keyframes toastProgress {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+#toast { position: fixed; bottom: 28px; right: 28px; overflow: hidden; }
+
+/* Float label animation */
+.form-group { position: relative; }
+label { transition: color 0.2s, transform 0.2s; display: block; }
+label.float-up { color: #63b3ed !important; }
+
+/* Input focus glow pulse */
+input:focus, textarea:focus {
+  animation: inputGlow 2s ease-in-out infinite;
+}
+@keyframes inputGlow {
+  0%,100% { box-shadow: 0 0 0 3px rgba(99,179,237,0.12); }
+  50%     { box-shadow: 0 0 0 5px rgba(99,179,237,0.2); }
+}
+
+/* Fieldset hover */
+fieldset {
+  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+}
+fieldset:hover {
+  border-color: rgba(99,179,237,0.35);
+  background: rgba(255,255,255,0.07);
+  box-shadow: 0 4px 20px rgba(99,179,237,0.08);
+}
+
+/* Card entrance animation */
+.card {
+  animation: pageIn 0.4s ease both;
+}
+
+/* Nav button active indicator */
+.nav-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 50%;
+  transform: translateX(-50%);
+  width: 20px; height: 2px;
+  background: #63b3ed;
+  border-radius: 2px;
+}
+.nav-btn { position: relative; }
+
+/* Table row hover slide */
+tbody tr {
+  transition: background 0.2s, transform 0.2s;
+}
+tbody tr:hover {
+  transform: translateX(4px);
+}
+
+/* Summary bar items pulse on load */
+.summary-value {
+  transition: color 0.3s;
+}
+
+/* Branch card entrance */
+.branch-card.visible {
+  animation: cardPop 0.4s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes cardPop {
+  from { opacity:0; transform: scale(0.92) translateY(20px); }
+  to   { opacity:1; transform: scale(1) translateY(0); }
+}
+
+/* PG card entrance on landing */
+.pg-card {
+  animation: cardPop 0.5s cubic-bezier(.22,1,.36,1) both;
+}
+
+/* Login box entrance */
+.login-box {
+  animation: loginBoxIn 0.6s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes loginBoxIn {
+  from { opacity:0; transform: scale(0.94) translateY(24px); }
+  to   { opacity:1; transform: scale(1) translateY(0); }
+}
+
+/* Login field focus border animation */
+.login-field {
+  transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+}
+.login-field:focus-within {
+  background: rgba(99,179,237,0.08);
+}
+
+/* Auth tab slide indicator */
+.auth-tabs { position: relative; }
+.auth-tab.active {
+  background: rgba(99,179,237,0.2);
+  color: #63b3ed;
+  transform: none;
+}
+.auth-tab {
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+}
+.auth-tab:active { transform: scale(0.96); }
+
+/* Stat number glow */
+.stat-num {
+  text-shadow: 0 0 20px rgba(99,179,237,0.5);
+  animation: statGlow 3s ease-in-out infinite;
+}
+@keyframes statGlow {
+  0%,100% { text-shadow: 0 0 20px rgba(99,179,237,0.4); }
+  50%     { text-shadow: 0 0 32px rgba(99,179,237,0.8), 0 0 60px rgba(0,212,255,0.3); }
+}
+
+/* Service card icon bounce on hover */
+.svc-card:hover .svc-icon-wrap {
+  animation: iconBounce 0.4s ease;
+}
+@keyframes iconBounce {
+  0%   { transform: scale(1) rotate(0); }
+  30%  { transform: scale(1.2) rotate(-8deg); }
+  60%  { transform: scale(0.95) rotate(4deg); }
+  100% { transform: scale(1.1) rotate(-4deg); }
+}
+
+/* Scroll hint bounce */
+.scroll-arrow {
+  animation: scrollBounce 1.5s ease-in-out infinite;
+}
+
+/* Header shimmer line pulse */
+#mainApp::before {
+  animation: shimmerLine 3s linear infinite;
+}
+
+/* Modal entrance */
+.modal-box {
+  animation: modalIn 0.3s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes modalIn {
+  from { opacity:0; transform: scale(0.92) translateY(20px); }
+  to   { opacity:1; transform: scale(1) translateY(0); }
+}
+
+/* Empty state animation */
+.empty-state {
+  animation: fadeUp 0.5s ease both;
+}
+
+/* Search input focus */
+.search-bar input:focus {
+  border-color: rgba(99,179,237,0.5);
+  box-shadow: 0 0 0 3px rgba(99,179,237,0.1);
+  outline: none;
+}
+
+/* Export button pulse */
+#exportBtn {
+  animation: exportPulse 3s ease-in-out infinite;
+}
+@keyframes exportPulse {
+  0%,100% { box-shadow: 0 4px 16px rgba(43,108,176,0.4); }
+  50%     { box-shadow: 0 4px 24px rgba(43,108,176,0.7), 0 0 0 4px rgba(43,108,176,0.15); }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .branch-cards { grid-template-columns: 1fr; }
+  .locations-grid { grid-template-columns: 1fr; }
+}

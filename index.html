@@ -324,7 +324,8 @@
           </div>
           <div class="branch-cards" id="branchCardsContainer">
             <!-- Tumkur branches -->
-            <div class="branch-card reveal-fast tumkur-branch" onclick="selectBranch('Tumkur Branch 1')">
+            <!-- Boys: only Branch 1 | Girls: Branch 1, 2, 3 -->
+            <div class="branch-card reveal-fast tumkur-branch" data-gender="boys" onclick="selectBranch('Tumkur Branch 1')">
               <div class="branch-card-glow"></div>
               <div class="branch-map-thumb">
                 <iframe src="https://maps.google.com/maps?q=13.3379,77.1173&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -332,40 +333,41 @@
               </div>
               <div class="branch-info">
                 <div class="branch-num">Branch 1</div>
-                <div class="branch-name">Hi-Fi PG · Tumkur</div>
+                <div class="branch-name">Hi-Fi Boys PG · Tumkur</div>
                 <a class="branch-map-link" href="https://maps.app.goo.gl/3nFQJ5QsVU2VGyvV6" target="_blank" rel="noopener" onclick="event.stopPropagation()">🗺️ View on Maps</a>
               </div>
               <div class="branch-select-btn">Select This Branch →</div>
             </div>
-            <div class="branch-card reveal-fast tumkur-branch" onclick="selectBranch('Tumkur Branch 2')">
+            <div class="branch-card reveal-fast tumkur-branch" data-gender="girls" onclick="selectBranch('Tumkur Branch 1')">
               <div class="branch-card-glow"></div>
               <div class="branch-map-thumb">
                 <iframe src="https://maps.google.com/maps?q=13.3420,77.1210&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 <div class="branch-map-overlay"></div>
               </div>
               <div class="branch-info">
-                <div class="branch-num">Branch 2</div>
-                <div class="branch-name">Hi-Fi PG · Tumkur</div>
+                <div class="branch-num">Branch 1</div>
+                <div class="branch-name">Hi-Fi Girls PG · Tumkur</div>
                 <a class="branch-map-link" href="https://maps.app.goo.gl/R6E4VH7yf5NTwkT59" target="_blank" rel="noopener" onclick="event.stopPropagation()">🗺️ View on Maps</a>
               </div>
               <div class="branch-select-btn">Select This Branch →</div>
             </div>
-            <div class="branch-card reveal-fast tumkur-branch" onclick="selectBranch('Tumkur Branch 3')">
+            <div class="branch-card reveal-fast tumkur-branch" data-gender="girls" onclick="selectBranch('Tumkur Branch 2')">
               <div class="branch-card-glow"></div>
               <div class="branch-map-thumb">
                 <iframe src="https://maps.google.com/maps?q=13.3350,77.1150&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 <div class="branch-map-overlay"></div>
               </div>
               <div class="branch-info">
-                <div class="branch-num">Branch 3</div>
-                <div class="branch-name">Hi-Fi PG · Tumkur</div>
+                <div class="branch-num">Branch 2</div>
+                <div class="branch-name">Hi-Fi Girls PG · Tumkur</div>
                 <a class="branch-map-link" href="https://maps.app.goo.gl/X9zHTN5u46dWNhKt9" target="_blank" rel="noopener" onclick="event.stopPropagation()">🗺️ View on Maps</a>
               </div>
               <div class="branch-select-btn">Select This Branch →</div>
             </div>
 
             <!-- Mysore branches -->
-            <div class="branch-card reveal-fast mysore-branch" style="display:none;" onclick="selectBranch('Mysore Branch 1')">
+            <!-- Boys: Branch 1, 2 | Girls: Branch 1, 2, 3 -->
+            <div class="branch-card reveal-fast mysore-branch" data-gender="boys" style="display:none;" onclick="selectBranch('Mysore Branch 1')">
               <div class="branch-card-glow"></div>
               <div class="branch-map-thumb">
                 <iframe src="https://maps.google.com/maps?q=12.2958,76.6394&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -373,12 +375,12 @@
               </div>
               <div class="branch-info">
                 <div class="branch-num">Branch 1</div>
-                <div class="branch-name">Hi-Fi PG · Mysore</div>
-                <a class="branch-map-link" href="https://maps.app.goo.gl/XgircrxGvWji2DXV8" target="_blank" rel="noopener" onclick="event.stopPropagation()">🗺️ View on Maps</a>
+                <div class="branch-name">Hi-Fi Boys PG · Mysore</div>
+                <a class="branch-map-link" href="https://maps.app.goo.gl/iuBHHqeoerDXz9Nw9" target="_blank" rel="noopener" onclick="event.stopPropagation()">🗺️ View on Maps</a>
               </div>
               <div class="branch-select-btn">Select This Branch →</div>
             </div>
-            <div class="branch-card reveal-fast mysore-branch" style="display:none;" onclick="selectBranch('Mysore Branch 2')">
+            <div class="branch-card reveal-fast mysore-branch" data-gender="boys" style="display:none;" onclick="selectBranch('Mysore Branch 2')">
               <div class="branch-card-glow"></div>
               <div class="branch-map-thumb">
                 <iframe src="https://maps.google.com/maps?q=12.3052,76.6551&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -386,21 +388,21 @@
               </div>
               <div class="branch-info">
                 <div class="branch-num">Branch 2</div>
-                <div class="branch-name">Hi-Fi PG · Mysore</div>
-                <a class="branch-map-link" href="https://maps.app.goo.gl/LXLfWpxhHiVW2SaGA" target="_blank" rel="noopener" onclick="event.stopPropagation()">🗺️ View on Maps</a>
+                <div class="branch-name">Bhairava Boys PG · Mysore</div>
+                <a class="branch-map-link" href="https://maps.app.goo.gl/dRxBcT8Vh8EbodQS9" target="_blank" rel="noopener" onclick="event.stopPropagation()">🗺️ View on Maps</a>
               </div>
               <div class="branch-select-btn">Select This Branch →</div>
             </div>
-            <div class="branch-card reveal-fast mysore-branch" style="display:none;" onclick="selectBranch('Mysore Branch 3')">
+            <div class="branch-card reveal-fast mysore-branch" data-gender="girls" style="display:none;" onclick="selectBranch('Mysore Branch 1')">
               <div class="branch-card-glow"></div>
               <div class="branch-map-thumb">
-                <iframe src="https://maps.google.com/maps?q=12.2900,76.6200&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <iframe src="https://maps.google.com/maps?q=12.2958,76.6394&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 <div class="branch-map-overlay"></div>
               </div>
               <div class="branch-info">
-                <div class="branch-num">Branch 3</div>
-                <div class="branch-name">Hi-Fi PG · Mysore</div>
-                <a class="branch-map-link" href="https://maps.app.goo.gl/YaKT72DoTPk8PEDN9" target="_blank" rel="noopener" onclick="event.stopPropagation()">🗺️ View on Maps</a>
+                <div class="branch-num">Branch 1</div>
+                <div class="branch-name">Hi-Fi Girls PG · Mysore</div>
+                <a class="branch-map-link" href="https://maps.app.goo.gl/GN52fngWRrFeAJC46" target="_blank" rel="noopener" onclick="event.stopPropagation()">🗺️ View on Maps</a>
               </div>
               <div class="branch-select-btn">Select This Branch →</div>
             </div>
@@ -618,5 +620,6 @@
   </div><!-- end #mainApp -->
 
   <script src="app.js"></script>
+  <script src="dynamic.js"></script>
 </body>
 </html>

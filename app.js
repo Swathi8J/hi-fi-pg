@@ -1,5 +1,10 @@
 ﻿// ===== CONFIG =====
-const API = 'http://localhost:3000/api';
+// Use environment-based API URL:
+// - On Railway/production: same origin (relative URL)
+// - On localhost: local server
+const API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? 'http://localhost:3000/api'
+  : '/api';
 
 // ===== DATA STORE =====
 let students        = [];
@@ -112,9 +117,16 @@ function selectLocation(location) {
   currentLocation = location;
   const isTumkur = location === 'Tumkur';
 
-  // Show correct set of branch cards
-  document.querySelectorAll('.tumkur-branch').forEach(el => el.style.display = isTumkur ? '' : 'none');
-  document.querySelectorAll('.mysore-branch').forEach(el => el.style.display = isTumkur ? 'none' : '');
+  // Show correct set of branch cards filtered by city AND gender
+  document.querySelectorAll('.tumkur-branch').forEach(el => {
+    const gender = el.dataset.gender; // 'boys' or 'girls'
+    const show = isTumkur && gender === currentPGType;
+    el.style.display = show ? '' : 'none';
+  });
+  document.querySelectorAll('.mysore-branch').forEach(el => {
+    const gender = el.dataset.gender;
+    el.style.display = (!isTumkur && gender === currentPGType) ? '' : 'none';
+  });
 
   // Update badge text
   const badge = document.getElementById('stepBranchBadge');
@@ -128,8 +140,12 @@ function selectLocation(location) {
   document.querySelectorAll('.reveal-fast').forEach(el => el.classList.remove('visible'));
   setTimeout(() => {
     const sel = isTumkur ? '.tumkur-branch' : '.mysore-branch';
-    document.querySelectorAll(sel).forEach((el, i) => {
-      setTimeout(() => el.classList.add('visible'), i * 120);
+    let idx = 0;
+    document.querySelectorAll(sel).forEach(el => {
+      if (el.style.display !== 'none') {
+        setTimeout(() => el.classList.add('visible'), idx * 120);
+        idx++;
+      }
     });
   }, 100);
 }
