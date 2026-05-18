@@ -29,7 +29,7 @@ exports.handler = async (event) => {
 
     if (error) throw error;
     if (!data)
-      return { statusCode: 401, headers, body: JSON.stringify({ error: 'Invalid username or password' }) };
+      return { statusCode: 401, headers, body: JSON.stringify({ error: 'Account not found. Please register first or check your username.' }) };
 
     return { statusCode: 200, headers, body: JSON.stringify({ success: true, user: data }) };
   } catch (e) {
