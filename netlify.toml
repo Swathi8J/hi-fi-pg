@@ -1,12 +1,33 @@
 [build]
   publish = "."
+  command = "npm install"
   functions = "netlify/functions"
 
+[functions]
+  node_bundler = "esbuild"
+
+# API redirects
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  from = "/api/login"
+  to = "/.netlify/functions/login"
   status = 200
 
+[[redirects]]
+  from = "/api/register"
+  to = "/.netlify/functions/register"
+  status = 200
+
+[[redirects]]
+  from = "/api/students/*"
+  to = "/.netlify/functions/students/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/api/export/*"
+  to = "/.netlify/functions/export/:splat"
+  status = 200
+
+# SPA fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"
