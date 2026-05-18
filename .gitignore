@@ -1,4 +1,0 @@
-node_modules/
-.env
-hifi_pg.db
-*.db
