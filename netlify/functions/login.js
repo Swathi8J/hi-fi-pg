@@ -1,12 +1,23 @@
 const { getSupabase } = require('./db');
 
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Content-Type': 'application/json'
+};
+
 exports.handler = async (event) => {
-  if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
+  if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
+  if (event.httpMethod !== 'POST') return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
 
   try {
-    const { username, password } = JSON.parse(event.body);
+    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) {
+      return { statusCode: 500, headers, body: JSON.stringify({ error: 'Server not configured. Please contact admin.' }) };
+    }
+
+    const { username, password } = JSON.parse(event.body || '{}');
     if (!username || !password)
-      return { statusCode: 400, body: JSON.stringify({ error: 'Username and password required' }) };
+      return { statusCode: 400, headers, body: JSON.stringify({ error: 'Username and password required' }) };
 
     const sb = getSupabase();
     const { data, error } = await sb
@@ -14,13 +25,15 @@ exports.handler = async (event) => {
       .select('id, username, full_name')
       .eq('username', username.trim())
       .eq('password', password)
-      .single();
+      .maybeSingle();
 
-    if (error || !data)
-      return { statusCode: 401, body: JSON.stringify({ error: 'Invalid username or password' }) };
+    if (error) throw error;
+    if (!data)
+      return { statusCode: 401, headers, body: JSON.stringify({ error: 'Invalid username or password' }) };
 
-    return { statusCode: 200, body: JSON.stringify({ success: true, user: data }) };
+    return { statusCode: 200, headers, body: JSON.stringify({ success: true, user: data }) };
   } catch (e) {
-    return { statusCode: 500, body: JSON.stringify({ error: e.message }) };
+    console.error('Login error:', e);
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Server error: ' + e.message }) };
   }
 };

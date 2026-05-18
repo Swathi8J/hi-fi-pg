@@ -41,6 +41,11 @@ function doLogin(e) {
   .then(data => {
     if (data.error) throw new Error(data.error);
     currentUser = data.user;
+    // Update profile bar
+    const nameEl   = document.getElementById('profileName');
+    const avatarEl = document.getElementById('profileAvatar');
+    if (nameEl)   nameEl.textContent   = data.user.full_name || data.user.username;
+    if (avatarEl) avatarEl.textContent = (data.user.full_name || data.user.username).charAt(0).toUpperCase();
     document.getElementById('loginPage').style.display   = 'none';
     document.getElementById('landingPage').style.display = 'flex';
     initParticles(); initCounters(); initScrollReveal();
