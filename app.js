@@ -41,11 +41,13 @@ function doLogin(e) {
   .then(data => {
     if (data.error) throw new Error(data.error);
     currentUser = data.user;
-    // Update profile bar
+    // Update and show profile bar
     const nameEl   = document.getElementById('profileName');
     const avatarEl = document.getElementById('profileAvatar');
+    const barEl    = document.getElementById('profileBar');
     if (nameEl)   nameEl.textContent   = data.user.full_name || data.user.username;
     if (avatarEl) avatarEl.textContent = (data.user.full_name || data.user.username).charAt(0).toUpperCase();
+    if (barEl)    barEl.classList.add('visible');
     document.getElementById('loginPage').style.display   = 'none';
     document.getElementById('landingPage').style.display = 'flex';
     initParticles(); initCounters(); initScrollReveal();
@@ -155,6 +157,8 @@ function togglePass(fieldId) {
 
 function doLogout() {
   currentUser = null; currentPGType = ''; currentLocation = ''; students = [];
+  const barEl = document.getElementById('profileBar');
+  if (barEl) barEl.classList.remove('visible');
   document.getElementById('mainApp').style.display     = 'none';
   document.getElementById('landingPage').style.display = 'none';
   document.getElementById('loginPage').style.display   = 'flex';
