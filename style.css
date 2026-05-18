@@ -970,3 +970,47 @@ tbody tr:hover {
   .branch-cards { grid-template-columns: 1fr; }
   .locations-grid { grid-template-columns: 1fr; }
 }
+
+/* ===== PASSWORD RULES & STRENGTH ===== */
+.pwd-rules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin: -6px 0 12px;
+  padding: 0 2px;
+}
+.rule {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.3);
+  transition: color 0.2s;
+}
+.rule-pass {
+  color: #68d391;
+}
+
+.pwd-strength-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: -4px 0 14px;
+}
+.pwd-strength-track {
+  flex: 1;
+  height: 4px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.pwd-strength-bar {
+  height: 100%;
+  width: 0;
+  border-radius: 4px;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+.pwd-strength-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  min-width: 80px;
+  text-align: right;
+  transition: color 0.3s;
+}

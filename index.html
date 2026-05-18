@@ -56,8 +56,8 @@
         <p class="login-sub">Welcome back! Sign in to continue</p>
         <form id="loginForm" onsubmit="doLogin(event)">
           <div class="login-field">
-            <span class="login-field-icon">👤</span>
-            <input type="text" id="loginUser" placeholder="Username" autocomplete="username" required />
+            <span class="login-field-icon">✉️</span>
+            <input type="email" id="loginUser" placeholder="Email" autocomplete="email" required />
           </div>
           <div class="login-field">
             <span class="login-field-icon">🔒</span>
@@ -81,13 +81,25 @@
             <input type="text" id="regName" placeholder="Full Name" required />
           </div>
           <div class="login-field">
-            <span class="login-field-icon">👤</span>
-            <input type="text" id="regUser" placeholder="Username" autocomplete="username" required />
+            <span class="login-field-icon">✉️</span>
+            <input type="email" id="regUser" placeholder="Email" autocomplete="email" required />
           </div>
           <div class="login-field">
             <span class="login-field-icon">🔒</span>
-            <input type="password" id="regPass" placeholder="Password (min 6 chars)" minlength="6" required />
+            <input type="password" id="regPass" placeholder="Password" minlength="8" required oninput="checkPasswordStrength()" />
             <button type="button" class="toggle-pass" onclick="togglePass('regPass')">👁</button>
+          </div>
+          <!-- Password rules hint -->
+          <div class="pwd-rules">
+            <span id="rule-len"  class="rule">✗ Min 8 characters</span>
+            <span id="rule-cap"  class="rule">✗ 1 capital letter</span>
+            <span id="rule-num"  class="rule">✗ 1 number</span>
+            <span id="rule-spec" class="rule">✗ No special characters</span>
+          </div>
+          <!-- Strength bar -->
+          <div class="pwd-strength-wrap">
+            <div class="pwd-strength-track"><div id="pwdStrengthBar" class="pwd-strength-bar"></div></div>
+            <span id="pwdStrengthLabel" class="pwd-strength-label"></span>
           </div>
           <div class="login-field">
             <span class="login-field-icon">🔒</span>

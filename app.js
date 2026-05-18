@@ -1,7 +1,6 @@
 ﻿// ===== CONFIG =====
-// Use environment-based API URL:
-// - On Railway/production: same origin (relative URL)
-// - On localhost: local server
+// Netlify Functions are at /api/* (redirected via netlify.toml)
+// Locally still uses localhost:3000
 const API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
   ? 'http://localhost:3000/api'
   : '/api';
@@ -46,24 +45,83 @@ function doLogin(e) {
     document.getElementById('landingPage').style.display = 'flex';
     initParticles(); initCounters(); initScrollReveal();
   })
-  .catch(err => { errEl.textContent = 'Invalid username or password'; errEl.style.display = 'block'; })
+  .catch(err => { errEl.textContent = 'Invalid email or password'; errEl.style.display = 'block'; })
   .finally(() => { btn.disabled = false; document.getElementById('loginBtnText').textContent = 'Sign In'; });
+}
+
+// ===== PASSWORD RULES =====
+// Min 8 chars, at least 1 uppercase, at least 1 number, NO special characters
+function validatePassword(pwd) {
+  if (pwd.length < 8)                    return 'Password must be at least 8 characters';
+  if (!/[A-Z]/.test(pwd))               return 'Password must contain at least 1 capital letter';
+  if (!/[0-9]/.test(pwd))               return 'Password must contain at least 1 number';
+  if (/[^A-Za-z0-9]/.test(pwd))         return 'Password must not contain special characters';
+  return null; // valid
+}
+
+// Live password strength checker
+function checkPasswordStrength() {
+  const pwd   = document.getElementById('regPass').value;
+  const bar   = document.getElementById('pwdStrengthBar');
+  const label = document.getElementById('pwdStrengthLabel');
+
+  const has8   = pwd.length >= 8;
+  const hasCap = /[A-Z]/.test(pwd);
+  const hasNum = /[0-9]/.test(pwd);
+  const noSpec = !/[^A-Za-z0-9]/.test(pwd);
+
+  // Update rule indicators
+  function setRule(id, pass) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = (pass ? '✓ ' : '✗ ') + el.textContent.slice(2);
+    el.className   = 'rule ' + (pass ? 'rule-pass' : '');
+  }
+  setRule('rule-len',  has8);
+  setRule('rule-cap',  hasCap);
+  setRule('rule-num',  hasNum);
+  setRule('rule-spec', noSpec);
+
+  if (!bar || !pwd) return;
+  const score = [has8, hasCap, hasNum, noSpec].filter(Boolean).length;
+  const levels = [
+    { w: '25%',  color: '#e53e3e', text: 'Too weak' },
+    { w: '50%',  color: '#dd6b20', text: 'Weak' },
+    { w: '75%',  color: '#d69e2e', text: 'Almost there' },
+    { w: '100%', color: '#38a169', text: 'Strong ✓' },
+  ];
+  const lvl = levels[score - 1] || levels[0];
+  bar.style.width      = lvl.w;
+  bar.style.background = lvl.color;
+  if (label) { label.textContent = lvl.text; label.style.color = lvl.color; }
 }
 
 // ===== AUTH: REGISTER =====
 function doRegister(e) {
   e.preventDefault();
-  const btn = document.getElementById('registerBtn');
-  const errEl  = document.getElementById('registerError');
-  const succEl = document.getElementById('registerSuccess');
+  const btn      = document.getElementById('registerBtn');
+  const errEl    = document.getElementById('registerError');
+  const succEl   = document.getElementById('registerSuccess');
   const fullName = document.getElementById('regName').value.trim();
   const username = document.getElementById('regUser').value.trim();
   const password = document.getElementById('regPass').value;
   const confirm  = document.getElementById('regPassConfirm').value;
+
   errEl.style.display = 'none'; succEl.style.display = 'none';
-  if (password !== confirm) {
-    errEl.textContent = 'Passwords do not match'; errEl.style.display = 'block'; return;
+
+  // Validate password rules
+  const pwdError = validatePassword(password);
+  if (pwdError) {
+    errEl.textContent = '❌ ' + pwdError; errEl.style.display = 'block';
+    if (typeof shakeInput === 'function') shakeInput('regPass');
+    return;
   }
+  if (password !== confirm) {
+    errEl.textContent = '❌ Passwords do not match'; errEl.style.display = 'block';
+    if (typeof shakeInput === 'function') shakeInput('regPassConfirm');
+    return;
+  }
+
   btn.disabled = true;
   document.getElementById('registerBtnText').textContent = 'Creating account...';
   fetch(API + '/register', {
@@ -73,11 +131,15 @@ function doRegister(e) {
   .then(r => r.json())
   .then(data => {
     if (data.error) throw new Error(data.error);
-    succEl.textContent = data.message; succEl.style.display = 'block';
+    succEl.textContent = '✅ ' + data.message; succEl.style.display = 'block';
     document.getElementById('registerForm').reset();
+    const bar = document.getElementById('pwdStrengthBar');
+    const lbl = document.getElementById('pwdStrengthLabel');
+    if (bar) bar.style.width = '0';
+    if (lbl) lbl.textContent = '';
     setTimeout(() => switchTab('login'), 2000);
   })
-  .catch(err => { errEl.textContent = err.message; errEl.style.display = 'block'; })
+  .catch(err => { errEl.textContent = '❌ ' + err.message; errEl.style.display = 'block'; })
   .finally(() => { btn.disabled = false; document.getElementById('registerBtnText').textContent = 'Create Account'; });
 }
 

@@ -85,10 +85,10 @@ async function initDB() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
   `);
 
-  // Insert default admin if not exists (username: admin, password: hifi@2024)
+  // Insert default admin if not exists (username: admin@hifi.com, password: hifi@2024)
   await pool.query(`
     INSERT IGNORE INTO admin_users (username, password, full_name)
-    VALUES ('admin', 'hifi@2024', 'Hi-Fi Admin')
+    VALUES ('admin@hifi.com', 'hifi@2024', 'Hi-Fi Admin')
   `);
 
   console.log('  MySQL DB ready: ' + (process.env.DB_NAME || 'hifi_pg'));
@@ -104,17 +104,23 @@ app.post('/api/register', async (req, res) => {
     const { username, password, full_name } = req.body;
     if (!username || !password || !full_name)
       return res.status(400).json({ error: 'All fields are required' });
-    if (username.trim().length < 3)
-      return res.status(400).json({ error: 'Username must be at least 3 characters' });
-    if (password.length < 6)
-      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username.trim()))
+      return res.status(400).json({ error: 'Please enter a valid email address' });
+    if (password.length < 8)
+      return res.status(400).json({ error: 'Password must be at least 8 characters' });
+    if (!/[A-Z]/.test(password))
+      return res.status(400).json({ error: 'Password must contain at least 1 capital letter' });
+    if (!/[0-9]/.test(password))
+      return res.status(400).json({ error: 'Password must contain at least 1 number' });
+    if (/[^A-Za-z0-9]/.test(password))
+      return res.status(400).json({ error: 'Password must not contain special characters' });
 
     // Check if username already exists
     const [existing] = await pool.query(
       'SELECT id FROM admin_users WHERE username = ?', [username.trim()]
     );
     if (existing.length)
-      return res.status(409).json({ error: 'Username already taken. Choose another.' });
+      return res.status(409).json({ error: 'Email already registered. Try signing in.' });
 
     await pool.query(
       'INSERT INTO admin_users (username, password, full_name) VALUES (?, ?, ?)',
@@ -131,14 +137,14 @@ app.post('/api/login', async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username || !password)
-      return res.status(400).json({ error: 'Username and password required' });
+      return res.status(400).json({ error: 'Email and password required' });
 
     const [rows] = await pool.query(
       'SELECT id, username, full_name FROM admin_users WHERE username = ? AND password = ?',
       [username.trim(), password]
     );
     if (!rows.length)
-      return res.status(401).json({ error: 'Invalid username or password' });
+      return res.status(401).json({ error: 'Invalid email or password' });
 
     res.json({ success: true, user: rows[0] });
   } catch (e) {
