@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hi-Fi PG Management</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -127,6 +128,16 @@
     <div class="orb orb1"></div>
     <div class="orb orb2"></div>
     <div class="orb orb3"></div>
+
+    <!-- PROFILE BAR — fixed top right, visible after login -->
+    <div class="profile-bar" id="profileBar">
+      <div class="profile-avatar" id="profileAvatar">A</div>
+      <div class="profile-info">
+        <div class="profile-name" id="profileName">Admin</div>
+        <div class="profile-role">PG Manager</div>
+      </div>
+      <button class="profile-logout-btn" onclick="doLogout()">⎋ Logout</button>
+    </div>
 
     <div class="landing-scroll">
 

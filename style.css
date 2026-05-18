@@ -1014,3 +1014,86 @@ tbody tr:hover {
   text-align: right;
   transition: color 0.3s;
 }
+
+/* ===== PROFILE BAR (landing page) ===== */
+.profile-bar {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9999;
+  display: none;  /* hidden until login */
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 50px;
+  padding: 8px 16px 8px 8px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  transition: opacity 0.3s;
+}
+.profile-bar.visible {
+  display: flex;
+  animation: fadeDown 0.5s ease both;
+}
+
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2b6cb0, #00d4ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 0 12px rgba(0,212,255,0.4);
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.profile-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.profile-role {
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.5px;
+}
+
+.profile-logout-btn {
+  background: rgba(229,62,62,0.15);
+  border: 1px solid rgba(229,62,62,0.3);
+  color: #fc8181;
+  font-size: 0.75rem;
+  padding: 5px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+.profile-logout-btn:hover {
+  background: rgba(229,62,62,0.3);
+  color: #fff;
+}
+
+@media (max-width: 480px) {
+  .profile-bar {
+    top: 10px;
+    right: 10px;
+    padding: 6px 12px 6px 6px;
+  }
+  .profile-name { font-size: 0.78rem; }
+  .profile-role { display: none; }
+}

@@ -1,7 +1,6 @@
 ﻿// ===== CONFIG =====
-// Use environment-based API URL:
-// - On Railway/production: same origin (relative URL)
-// - On localhost: local server
+// Netlify Functions are at /api/* (redirected via netlify.toml)
+// Locally still uses localhost:3000
 const API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
   ? 'http://localhost:3000/api'
   : '/api';
@@ -42,6 +41,13 @@ function doLogin(e) {
   .then(data => {
     if (data.error) throw new Error(data.error);
     currentUser = data.user;
+    // Update and show profile bar
+    const nameEl   = document.getElementById('profileName');
+    const avatarEl = document.getElementById('profileAvatar');
+    const barEl    = document.getElementById('profileBar');
+    if (nameEl)   nameEl.textContent   = data.user.full_name || data.user.username;
+    if (avatarEl) avatarEl.textContent = (data.user.full_name || data.user.username).charAt(0).toUpperCase();
+    if (barEl)    barEl.classList.add('visible');
     document.getElementById('loginPage').style.display   = 'none';
     document.getElementById('landingPage').style.display = 'flex';
     initParticles(); initCounters(); initScrollReveal();
@@ -151,6 +157,8 @@ function togglePass(fieldId) {
 
 function doLogout() {
   currentUser = null; currentPGType = ''; currentLocation = ''; students = [];
+  const barEl = document.getElementById('profileBar');
+  if (barEl) barEl.classList.remove('visible');
   document.getElementById('mainApp').style.display     = 'none';
   document.getElementById('landingPage').style.display = 'none';
   document.getElementById('loginPage').style.display   = 'flex';
