@@ -1,12 +1,8 @@
-[build]
+﻿[build]
   publish = "."
   command = "npm install"
   functions = "netlify/functions"
 
-[functions]
-  node_bundler = "esbuild"
-
-# API redirects
 [[redirects]]
   from = "/api/login"
   to = "/.netlify/functions/login"
@@ -27,7 +23,6 @@
   to = "/.netlify/functions/export/:splat"
   status = 200
 
-# SPA fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"
