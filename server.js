@@ -24,26 +24,34 @@ const upload = multer({
 let pool;
 
 async function initDB() {
+  // SSL config — required for cloud MySQL (Aiven, PlanetScale, etc.)
+  const sslConfig = process.env.DB_SSL === 'true'
+    ? { ssl: { rejectUnauthorized: false } }
+    : {};
+
   pool = mysql.createPool({
     host:     process.env.DB_HOST     || 'localhost',
-    port:     process.env.DB_PORT     || 3306,
+    port:     +(process.env.DB_PORT   || 3306),
     user:     process.env.DB_USER     || 'root',
     password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME     || 'hifi_pg',
     waitForConnections: true,
     connectionLimit:    10,
-    queueLimit:         0
+    queueLimit:         0,
+    ...sslConfig
   });
 
-  // Create database if not exists
-  const tempConn = await mysql.createConnection({
-    host:     process.env.DB_HOST     || 'localhost',
-    port:     process.env.DB_PORT     || 3306,
-    user:     process.env.DB_USER     || 'root',
-    password: process.env.DB_PASSWORD || ''
-  });
-  await tempConn.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME || 'hifi_pg'}\``);
-  await tempConn.end();
+  // Only create DB locally — cloud providers give it pre-created
+  if (!process.env.DB_SSL) {
+    const tempConn = await mysql.createConnection({
+      host:     process.env.DB_HOST     || 'localhost',
+      port:     +(process.env.DB_PORT   || 3306),
+      user:     process.env.DB_USER     || 'root',
+      password: process.env.DB_PASSWORD || ''
+    });
+    await tempConn.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME || 'hifi_pg'}\``);
+    await tempConn.end();
+  }
 
   // Create students table
   await pool.query(`
